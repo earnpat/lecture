@@ -10,8 +10,8 @@ class RegisterInput extends React.Component {
         return (
             <div>
                 <Row className="row-padding">
-                    <Col xs={1} sm={4} md={6} lg={8}></Col>
-                    <Col xs={22} sm={16} md={10} lg={8}>
+                    <Col span={8}></Col>
+                    <Col span={8}>
                         <div className="reg">สมัครสมาชิก</div>
                         <div className="reg-info"><Input placeholder="ชื่อ (ภาษาไทย)" /></div>
                         <div className="reg-info"><Input placeholder="นามสกุล (ภาษาไทย)" /></div>
@@ -20,10 +20,12 @@ class RegisterInput extends React.Component {
                         </div>
                         <div className="reg-info"><Input placeholder="อีเมลล์" /></div>
                         <div className="reg-info"><Input placeholder="เบอร์ติดต่อ" /></div>
-                        <div className="reg-info"><Input placeholder="รหัสผ่าน" /></div>
-                        <div className="reg-info"><Input placeholder="ยืนยันรหัสผ่าน" /></div>
+                        <div className="reg-info"><Input type="password" placeholder="รหัสผ่าน" /></div>
+                        <div className="reg-info"><Input type="password" placeholder="ยืนยันรหัสผ่าน" /></div>
+                        <div className="reg-info"><button className="btn-reg">ลงทะเบียน</button></div>
+                        <div className="reg-info"><button className="btn-cc">ยกเลิก</button></div>
                     </Col>
-                    <Col xs={1} sm={4} md={6} lg={8}></Col>
+                    <Col span={8}></Col>
                 </Row>
             </div>
         )

@@ -1,0 +1,28 @@
+.container-upload {
+    margin: 50px 100px;
+}
+
+.upload-input {
+    padding: 5px 0;
+    display: flex;
+    align-items: baseline;
+    font-size: 18px;
+    // border: thin solid black;
+    Input {
+        width: 100%;
+        height: 35px;
+        padding: 7px;
+        border-radius: 8px;
+        border: 1px solid #d9d9d9;
+    }
+}
+
+.ant-upload-select-picture-card i {
+    font-size: 32px;
+    color: #999;
+}
+  
+.ant-upload-select-picture-card .ant-upload-text {
+    margin-top: 8px;
+    color: #666;
+}

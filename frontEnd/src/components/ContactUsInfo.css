@@ -1,0 +1,23 @@
+.container {
+    margin: 40px 100px;
+}
+
+.title {
+    color: #006699;
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.contact {
+    font-size: 18px;
+}
+
+.follow-us {
+    margin: 5px;
+}
+
+.follow-us img {
+    width: 45px;
+    cursor: pointer;
+}
