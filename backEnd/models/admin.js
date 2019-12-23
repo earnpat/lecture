@@ -19,14 +19,14 @@ module.exports = (sequelize, Datatype) => {
         timestamps: false
     })
 
-    Admin.associate = (models) => {
-        Admin.hasMany(models.product, {
-            foreignKey: {
-                name: 'admin_id',
-                allowNull: false
-            }
-        })
-    }
+    // Admin.associate = (models) => {
+    //     Admin.hasMany(models.product, {
+    //         foreignKey: {
+    //             name: 'admin_id',
+    //             allowNull: false
+    //         }
+    //     })
+    // }
 
     return Admin
 }

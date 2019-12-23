@@ -6,6 +6,7 @@ import Home from './pages/Home'
 import Register from './pages/Register'
 import ContactUs from './pages/ContactUs'
 import Upload from './pages/Upload'
+import Test from './components/Test'
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route exact path='/register' component={Register}/>
         <Route exact path='/contactus' component={ContactUs}/>
         <Route exact path='/upload' component={Upload}/>
+        <Route exact path='/test' component={Test}/>
         <Redirect to='/home' />
       </Switch>
     </div>

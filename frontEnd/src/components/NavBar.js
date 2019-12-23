@@ -32,8 +32,8 @@ export default class NavBar extends Component {
                         >
                             <div>
                                 <div className="log">เข้าสู่ระบบ</div>
-                                <div className="log-user"><Input type="email" placeholder="ชื่อผู้ใช้" /></div>
-                                <div className="log-user"><Input type="password" placeholder="รหัสผ่าน" /></div>
+                                <div className="log-user"><Input type="email" placeholder="ชื่อผู้ใช้" prefix={<Icon type="user" style={{ color: '#d9d9d9' }} />}/></div>
+                                <div className="log-user"><Input type="password" placeholder="รหัสผ่าน" prefix={<Icon type="lock" style={{ color: '#d9d9d9' }} />}/></div>
                                 <div className="log-user"><button className="btn-log">เข้าสู่ระบบ</button></div>
                             </div>
                         </Modal>

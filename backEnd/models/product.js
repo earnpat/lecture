@@ -28,12 +28,12 @@ module.exports = (sequelize, Datatype) => {
     })
 
     Product.associate = (models) => {
-        Product.belongsTo(models.admin, {
-            foreignKey: {
-                name: 'admin_id',
-                allowNull: false
-            }
-        })
+        // Product.belongsTo(models.admin, {
+        //     foreignKey: {
+        //         name: 'admin_id',
+        //         allowNull: false
+        //     }
+        // })
         Product.belongsTo(models.procat, {
             foreignKey: {
                 name: 'proCat_id',

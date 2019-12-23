@@ -1,5 +1,5 @@
 .row-padding {
-    padding: 20px 0;
+    padding: 20px 20%;
 }
 
 .reg {
@@ -7,7 +7,7 @@
     font-size: 40px;
     font-weight: bold;
     text-align: center;
-    margin-top: 15px;
+    margin: 15px 0;
 }
 
 .reg-info {
@@ -18,7 +18,7 @@
     width: 100%;
     height: 35px;
     padding: 7px;
-    border-radius: 8px;
+    border-radius: 4px;
     border: 1px solid #d9d9d9;
 }
 
@@ -32,7 +32,7 @@
     font-size: 15px;
     background-color: #006699;
     color: white;
-    border-radius: 8px;
+    border-radius: 4px;
     border: 1px solid #006699;
     cursor: pointer;
     transition: all 0.3s;
@@ -49,7 +49,7 @@
     font-size: 15px;
     background-color: white;
     color: #bfbfbf;
-    border-radius: 8px;
+    border-radius: 4px;
     border: 1px solid #d9d9d9;
     cursor: pointer;
     transition: all 0.3s;

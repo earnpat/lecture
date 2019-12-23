@@ -2,7 +2,8 @@ module.exports = (sequelize, Datatype) => {
 
     const Customer = sequelize.define('customer', {
         customer_id: {
-            type: Datatype.INTEGER,
+            type: Datatype.UUID,
+            defaultValue: Datatype.UUIDV4,
             allowNull: false,
             primaryKey: true,
             unique: true
@@ -22,6 +23,10 @@ module.exports = (sequelize, Datatype) => {
         lastname: {
             type: Datatype.STRING,
             allowNull: true
+        },
+        birth: {
+            type: Datatype.STRING,
+            allowNull: false
         },
         email: {
             type: Datatype.STRING,
