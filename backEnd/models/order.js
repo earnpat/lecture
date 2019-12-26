@@ -2,7 +2,8 @@ module.exports = (sequelize, Datatype) => {
 
     const Order = sequelize.define('order', {
         order_id: {
-            type: Datatype.INTEGER,
+            type: Datatype.UUID,
+            defaultValue: Datatype.UUIDV4,
             allowNull: false,
             primaryKey: true,
             unique: true

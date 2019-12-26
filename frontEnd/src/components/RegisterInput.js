@@ -38,20 +38,20 @@ class RegisterInputInfo extends React.Component {
         // console.log(e)
         e.preventDefault()
 
-        this.props.sendDataToState(this.state) // redux
-
-        if (this.state.comparePasswords) {
-            const { customer_username, customer_password, firstname, lastname, birth, email, address, tel } = this.state
-            Axios.post('/register', { customer_username, customer_password, firstname, lastname, birth, email, address, tel })
-                .then(result => {
-                    // console.log('success regis')
-                    console.log(result)
-                })
-                .catch(err => {
-                    // console.error('fail regis');
-                    console.error(err.message);
-                })
-        }
+        this.props.form.validateFields((errors, values) => {
+            if (!errors) {
+                if (this.state.comparePasswords) {
+                    const { customer_username, customer_password, firstname, lastname, birth, email, address, tel } = this.state
+                    Axios.post('/register', { customer_username, customer_password, firstname, lastname, birth, email, address, tel })
+                        .then(result => {
+                           this.props.setUserDAcc(result.data)
+                        })
+                        .catch(err => {
+                            console.error(err.message);
+                        })
+                }
+            }
+        });
     }
 
     handleConfirmBlur = e => {
@@ -64,7 +64,7 @@ class RegisterInputInfo extends React.Component {
         const { form } = this.props;
         if (value && value !== form.getFieldValue("password")) {
             this.setState({ comparePasswords: false })
-            callback("Two passwords that you enter is inconsistent !");
+            callback("รหัสผ่านไม่ตรงกัน");
         } else {
             this.setState({ comparePasswords: true })
             callback();
@@ -87,85 +87,89 @@ class RegisterInputInfo extends React.Component {
         const dateFormatList = ['DD/MM/YYYY'];
         const { getFieldDecorator } = this.props.form;
 
+        console.log('this data from DB')
+        console.log(this.props.data) 
+
         return (
             <div className="row-padding">
                 <div className="reg">สมัครสมาชิก</div>
+                <div className="req-star">กรุณากรอกช่องที่มี * ให้ครบ</div>
 
                 <Row gutter={[40, 0]}>
                     <Col span={12}>
-                        <Form.Item>
+                        <Form.Item className="reg-info">
                             {getFieldDecorator("email", {
                                 rules: [
                                     {
                                         type: "email",
-                                        message: "The input is not valid E-mail."
+                                        message: "อีเมลล์ผิดพลาด"
                                     },
                                     {
                                         required: true,
-                                        message: "Please input your E-mail."
+                                        message: "กรุณากรอกอีเมลล์"
                                     }
                                 ]
-                            })(<Input name="email" onChange={(e) => this.handleChange(e)} placeholder="อีเมลล์" />)}
+                            })(<Input name="email" onChange={(e) => this.handleChange(e)} placeholder="อีเมลล์ *" />)}
                         </Form.Item>
                     </Col>
 
                     <Col span={12}>
-                        <Form.Item>
-                            {getFieldDecorator("nickname", {
+                        <Form.Item className="reg-info">
+                            {getFieldDecorator("username", {
                                 rules: [
                                     {
                                         required: true,
-                                        message: "Please input your username.",
+                                        message: "กรุณากรอกชื่อผู้ใช้",
                                         whitespace: true
                                     }
                                 ]
-                            })(<Input name="customer_username" onChange={(e) => this.handleChange(e)} placeholder="ชื่อผู้ใช้"/>)}
+                            })(<Input name="customer_username" onChange={(e) => this.handleChange(e)} placeholder="ชื่อผู้ใช้ *" />)}
                         </Form.Item>
                     </Col>
                 </Row>
 
                 <Row gutter={[40, 0]}>
                     <Col span={12}>
-                        <Form.Item hasFeedback>
+                        <Form.Item hasFeedback className="reg-info">
                             {getFieldDecorator("password", {
                                 rules: [
                                     {
                                         required: true,
-                                        message: "Please input your password."
+                                        message: "กรุณากรอกรหัสผ่าน"
                                     },
                                     {
                                         validator: this.validateToNextPassword
                                     }
                                 ]
-                            })(<Input.Password name="customer_password" onChange={(e) => this.handleChange(e)} placeholder="รหัสผ่าน" />)}
+                            })(<Input.Password name="customer_password" onChange={(e) => this.handleChange(e)} placeholder="รหัสผ่าน *" />)}
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item hasFeedback>
+                        <Form.Item hasFeedback className="reg-info">
                             {getFieldDecorator("confirm", {
                                 rules: [
                                     {
                                         required: true,
-                                        message: "Please confirm your password."
+                                        message: "กรุณายืนยันรหัสผ่าน"
                                     },
                                     {
                                         validator: this.compareToFirstPassword
                                     }
                                 ]
-                            })(<Input.Password placeholder="ยืนยันรหัสผ่าน" onBlur={this.handleConfirmBlur} />)}
+                            })(<Input.Password placeholder="ยืนยันรหัสผ่าน *" onBlur={this.handleConfirmBlur} />)}
                         </Form.Item>
                     </Col>
                 </Row>
 
-                <Row gutter={[40, 0]}>
+                <Row gutter={[40, 0]} style={{ marginBottom: '24px' }}>
                     <Col span={12}>
                         <div className="reg-info">
-                            <Input name="firstname" onChange={(e) => this.handleChange(e)} placeholder="ชื่อ (ภาษาไทย)" />
+                            <Input name="firstname" onChange={(e) => this.handleChange(e)} placeholder="ชื่อ" />
                         </div>
                     </Col>
                     <Col span={12}>
                         <div className="reg-info">
-                            <Input name="lastname" onChange={(e) => this.handleChange(e)} placeholder="นามสกุล (ภาษาไทย)" />
+                            <Input name="lastname" onChange={(e) => this.handleChange(e)} placeholder="นามสกุล" />
                         </div>
                     </Col>
                 </Row>
@@ -173,92 +177,40 @@ class RegisterInputInfo extends React.Component {
                 <Row gutter={[40, 0]}>
                     <Col span={12}>
                         <div className="reg-info">
-                            <DatePicker className="birth" onChange={(date, dateString) => this.handleBirthChange(date, dateString)} placeholder="วันเกิด" defaultValue='' format={dateFormatList} />
+                            <DatePicker style={{width: '100%'}} OnChange={(date, dateString) => this.handleBirthChange(date, dateString)} placeholder="วันเกิด" defaultValue='' format={dateFormatList} />
                         </div>
                     </Col>
                     <Col span={12}>
-                        <div className="reg-info">
-                            <Input name="tel" onChange={(e) => this.handleChange(e)} placeholder="เบอร์ติดต่อ" />
-                        </div>
+                        <Form.Item className="reg-info">
+                            {getFieldDecorator("tel", {
+                                rules: [
+                                    {
+                                        required: true,
+                                        message: "กรุณากรอกเบอร์ติดต่อ",
+                                        whitespace: true
+                                    }
+                                ]
+                            })(<Input name="tel" onChange={(e) => this.handleChange(e)} placeholder="เบอร์ติดต่อ *" />)}
+                        </Form.Item>
                     </Col>
                 </Row>
 
                 <Row>
-                    <div className="reg-info">
-                        <TextArea rows={4} name="address" onChange={(e) => this.handleChange(e)} placeholder="ที่อยู่" />
-                    </div>
+                    <Form.Item>
+                        {getFieldDecorator("address", {
+                            rules: [
+                                {
+                                    required: true,
+                                    message: "กรุณากรอกที่อยู่",
+                                    whitespace: true
+                                }
+                            ]
+                        })(<TextArea rows={4} name="address" onChange={(e) => this.handleChange(e)} placeholder="ที่อยู่ *" />)}
+                    </Form.Item>
                 </Row>
 
-
-
-
                 <Row>
-                    {/* <Col span={8}></Col> */}
                     <div>
-                        {/* <div className="reg">สมัครสมาชิก</div> */}
-                        {/* <div className="reg-info">
-                            <Input name="customer_username" onChange={(e) => this.handleChange(e)} placeholder="ชื่อผู้ใช้" />
-                        </div> */}
-
-                        {/* <Form.Item hasFeedback>
-                            {getFieldDecorator("password", {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: "Please input your password."
-                                    },
-                                    {
-                                        validator: this.validateToNextPassword
-                                    }
-                                ]
-                            })(<Input.Password name="customer_password" onChange={(e) => this.handleChange(e)} placeholder="รหัสผ่าน" />)}
-                        </Form.Item> */}
-
-                        {/* <Form.Item hasFeedback>
-                            {getFieldDecorator("confirm", {
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: "Please confirm your password."
-                                    },
-                                    {
-                                        validator: this.compareToFirstPassword
-                                    }
-                                ]
-                            })(<Input.Password placeholder="ยืนยันรหัสผ่าน" onBlur={this.handleConfirmBlur} />)}
-                        </Form.Item> */}
-
-                        {/* <div className="reg-info">
-                            <Input name="firstname" onChange={(e) => this.handleChange(e)} placeholder="ชื่อ (ภาษาไทย)" />
-                        </div> */}
-                        {/* <div className="reg-info">
-                            <Input name="lastname" onChange={(e) => this.handleChange(e)} placeholder="นามสกุล (ภาษาไทย)" />
-                        </div> */}
-                        {/* <div className="reg-info">
-                            <DatePicker className="birth" onChange={(date, dateString) => this.handleBirthChange(date, dateString)} placeholder="วันเกิด" defaultValue='' format={dateFormatList} />
-                        </div> */}
-
-                        {/* <Form.Item>
-                            {getFieldDecorator("email", {
-                                rules: [
-                                    {
-                                        type: "email",
-                                        message: "The input is not valid E-mail."
-                                    },
-                                    {
-                                        required: true,
-                                        message: "Please input your E-mail."
-                                    }
-                                ]
-                            })(<Input name="email" onChange={(e) => this.handleChange(e)} placeholder="อีเมลล์" />)}
-                        </Form.Item> */}
-
-                        {/* <div className="reg-info">
-                            <Input name="address" onChange={(e) => this.handleChange(e)} placeholder="ที่อยู่" />
-                        </div> */}
-                        {/* <div className="reg-info">
-                            <Input name="tel" onChange={(e) => this.handleChange(e)} placeholder="เบอร์ติดต่อ" />
-                        </div> */}
                         <div className="reg-info">
                             <button className="btn-reg" onClick={(e) => this.handleRegister(e)}>ลงทะเบียน</button>
                         </div>
@@ -268,7 +220,6 @@ class RegisterInputInfo extends React.Component {
                             </a>
                         </div>
                     </div>
-                    {/* <Col span={8}></Col> */}
                 </Row>
             </div>
         )
@@ -278,11 +229,11 @@ class RegisterInputInfo extends React.Component {
 // export default RegisterInput
 
 const mapStateToProps = state => ({
-    user: state.user
+    data: state.user.data
 })
 
 const mapDispatchToProps = dispatch => ({
-    sendDataToState: (data) => dispatch(setUserData(data))
+    setUserDAcc: (data) => dispatch(setUserData(data))
 })
 
 const RegisterInput = Form.create()(RegisterInputInfo);

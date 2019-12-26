@@ -26,7 +26,7 @@ module.exports = (sequelize, Datatype) => {
         },
         birth: {
             type: Datatype.STRING,
-            allowNull: false
+            allowNull: true
         },
         email: {
             type: Datatype.STRING,

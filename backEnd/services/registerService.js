@@ -17,6 +17,7 @@ module.exports = (app, db) => {
         email = req.body.email
         address = req.body.address
         tel = req.body.tel
+        
         db.customer.create({
             customer_id: customer_id,
             customer_username: customer_username,
@@ -26,7 +27,8 @@ module.exports = (app, db) => {
             birth: birth,
             email: email,
             address: address,
-            tel: tel
+            tel: tel,
+            
         }).then((result) => {
             // console.log('customer regis success')
             res.status(201).json(result)

@@ -4,7 +4,6 @@ const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 const cors = require('cors')
 
-
 // connect database to create model
 const db = require('./models');
 

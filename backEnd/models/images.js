@@ -1,41 +1,41 @@
 module.exports = (sequelize, Datatype) => {
 
-    const Product = sequelize.define('product', {
-        product_id: {
+    const Images = sequelize.define('images', {
+        images_id: {
             type: Datatype.UUID,
             defaultValue: Datatype.UUIDV4,
             allowNull: false,
             primaryKey: true,
             unique: true
         },
-        product_name: {
+        image_url_1: {
             type: Datatype.STRING,
             allowNull: false
         },
-        price: {
-            type: Datatype.INTEGER,
-            allowNull: false
-        },
-        detail: {
-            type: Datatype.TEXT,
+        image_url_2: {
+            type: Datatype.STRING,
             allowNull: true
         },
-        category: {
+        image_url_3: {
             type: Datatype.STRING,
-            allowNull: false
+            allowNull: true
+        },
+        image_url_4: {
+            type: Datatype.STRING,
+            allowNull: true
         }
     },{freezeTableName: true,
         timestamps: false
     })
 
-    Product.associate = (models) => {
-        Product.hasOne(models.shopcart, {
-            foreignKey: {
-                name: 'product_id',
-                allowNull: false
-            }
-        })
-        Product.belongsTo(models.images, {
+    Images.associate = (models) => {
+        // Product.belongsTo(models.admin, {
+        //     foreignKey: {
+        //         name: 'admin_id',
+        //         allowNull: false
+        //     }
+        // })
+        Images.hasOne(models.product, {
             foreignKey: {
                 name: 'images_id',
                 allowNull: false
@@ -43,5 +43,5 @@ module.exports = (sequelize, Datatype) => {
         })
     }
 
-    return Product
+    return Images
 }
