@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import { Carousel } from 'antd'
-import './HomeSlideImg.css'
+import './HomeSlideImg.scss'
 import { Row, Col } from 'antd'
 
 export default class Home extends Component {
     render() {
         return (
             <>
-                <Row className="row-padding">
+                <Row className="row-home">
                     <Col span={4}></Col>
                     <Col span={16}>
                         <Carousel autoplay effect="fade">

@@ -29,12 +29,6 @@ module.exports = (sequelize, Datatype) => {
     })
 
     Images.associate = (models) => {
-        // Product.belongsTo(models.admin, {
-        //     foreignKey: {
-        //         name: 'admin_id',
-        //         allowNull: false
-        //     }
-        // })
         Images.hasOne(models.product, {
             foreignKey: {
                 name: 'images_id',

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import './ContactUsInfo.css'
+import './ContactUsInfo.scss'
 
 export class ContactUsInfo extends Component {
     render() {

@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import NavBar from '../components/NavBar'
-import UploadInfo from '../components/UploadInfo'
+import UploadProduct from '../components/UploadProduct'
 
 export class Upload extends Component {
     render() {
         return (
             <div>
                 <NavBar />
-                <UploadInfo />
+                <UploadProduct />
             </div>
         )
     }

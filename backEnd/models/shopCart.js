@@ -27,9 +27,9 @@ module.exports = (sequelize, Datatype) => {
                 allowNull: false
             }
         })
-        ShopCart.belongsTo(models.customer, {
+        ShopCart.belongsTo(models.user, {
             foreignKey: {
-                name: 'customer_id',
+                name: 'user_id',
                 allowNull: false
             }
         })

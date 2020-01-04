@@ -1,0 +1,154 @@
+.navBar {
+    height: 120px;
+    background-color: white;
+    border-bottom: thin solid #dddddd;
+    box-shadow: 0px 1px 6px 0px #999999;
+    position: sticky;
+    top: 0;
+}
+
+.blank {
+    background-color: #006699;
+    padding: 5px 20px;
+}
+
+.log-reg {
+    color: white;
+    font-size: 15px;
+    text-align: right;
+}
+
+.reg-link {
+    color: white;
+    opacity: 0.8;
+    font-size: 15px;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.reg-link:hover {
+    color: white;
+    opacity: 1;
+}
+
+.log-modal {
+    color: white;
+    opacity: 0.8;
+    font-size: 15px;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.log-modal:hover {
+    color: white;
+    opacity: 1;
+}
+
+.logo-nav {
+    text-align: right;
+    padding: 20px;
+    /* border: thin solid #000000; */
+}
+
+.logo-nav img {
+    /* border: thin solid #000000; */
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+.search-input-nav,
+.search-icon-nav {
+    padding: 10px;
+}
+
+.search-input-nav input {
+    width: 100%;
+    height: 30px;
+    padding: 7px;
+    color: #000000;
+    border-radius: 4px;
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    border: 1px solid #d9d9d9;
+    border-right: transparent;
+}
+
+.search-input-nav input::placeholder {
+    color: #bfbfbf;
+}
+
+.search-icon-nav button {
+    width: 100%;
+    height: 30px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    border: 1px solid #d9d9d9;
+    border-left: transparent;
+    color: #d9d9d9;
+    transition: 1s ease;
+    opacity: 1;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.search-icon-nav button :hover {
+    color: #bfbfbf;
+}
+
+.cart {
+    text-align: center;
+    padding-top: 15px;
+}
+
+.cart-icon {
+    cursor: pointer;
+    font-size: 30px;
+}
+
+.menu span {
+    color: #006699;
+    cursor: pointer;
+}
+
+.menu {
+    text-align: center;
+    padding: 5px;
+    font-size: 18px;
+    /* border: thin solid #000000; */
+}
+
+.log {
+    text-align: center;
+    font-size: 18px;
+}
+
+.log-user {
+    padding: 5px 0;
+}
+
+.log-user Input {
+    width: 100%;
+    height: 30px;
+    padding: 7px;
+    border-radius: 4px;
+    border: 1px solid #d9d9d9;
+}
+
+.btn-log {
+    width: 100%;
+    height: 30px;
+    font-size: 15px;
+    background-color: #006699;
+    color: white;
+    border-radius: 4px;
+    border: 1px solid #006699;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-log:hover {
+    background-color: #77ddff;
+    border: 1px solid #77ddff;
+}
