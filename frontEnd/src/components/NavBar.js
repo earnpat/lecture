@@ -1,31 +1,22 @@
 import React, { Component } from "react";
 import "./NavBar.scss";
 import Axios from "../config/axios.setup";
-import { Link } from "react-router-dom";
+import jwtDecode from "jwt-decode";
+import { Link, withRouter } from "react-router-dom";
+import { loginError } from "../components/Notifications/notification";
 import { Row, Col, Button } from "antd";
 import { Icon, Tooltip, Popover, Modal, Input, Badge, Alert } from "antd";
 
-function loginError() {
-  return (<Alert
-    message="Error"
-    description="username or password is incorrect."
-    type="error"
-    showIcon
-  />)
-}
-
-export default class NavBar extends Component {
+class NavBar extends Component {
   state = {
     modalVisible: false,
     username: "",
-    password: "",
+    password: ""
   };
 
   setModalVisible(modalVisible) {
     this.setState({ modalVisible });
   }
-
-  
 
   handleLogin = e => {
     e.preventDefault();
@@ -33,16 +24,11 @@ export default class NavBar extends Component {
     Axios.post("/login", { username, password })
       .then(result => {
         console.log(result.data);
-        // successLoginNotification();
-        alert('44444')
-        localStorage.setItem("ACCESS_TOKEN", result.data.token);
-        this.props.history.push("/planner");
+        this.props.history.push("/home");
       })
       .catch(err => {
         console.error(err);
-        alert('555555')
-        loginError()
-        // failLoginNotification("something went wrong.");
+        loginError("Username or password is incorrect.");
       });
   };
 
@@ -77,17 +63,14 @@ export default class NavBar extends Component {
                 <div className="log">เข้าสู่ระบบ</div>
                 <div className="log-user">
                   <Input
-                    type="email"
-                    // name="username"
                     onChange={e => this.setState({ username: e.target.value })}
-                    placeholder="อีเมลล์"
+                    placeholder="ชื่อผู้ใช้"
                     prefix={<Icon type="user" style={{ color: "#d9d9d9" }} />}
                   />
                 </div>
                 <div className="log-user">
                   <Input
                     type="password"
-                    // name="password"
                     onChange={e => this.setState({ password: e.target.value })}
                     placeholder="รหัสผ่าน"
                     prefix={<Icon type="lock" style={{ color: "#d9d9d9" }} />}
@@ -121,7 +104,9 @@ export default class NavBar extends Component {
               </Col>
               <Col span={5} className="cart">
                 <Badge count={0} showZero>
-                  <Icon className="cart-icon" type="shopping-cart" />
+                  <Link to="/shoppingcart">
+                    <Icon className="cart-icon" type="shopping-cart" />
+                  </Link>
                 </Badge>
               </Col>
             </Row>
@@ -156,3 +141,5 @@ export default class NavBar extends Component {
     );
   }
 }
+
+export default withRouter(NavBar);

@@ -1,14 +1,12 @@
-import { Alert } from 'antd'
+import { notification, Icon } from 'antd'
 import React from 'react'
 
-const loginError = () => {
-    return (
-        <Alert
-            message="Error"
-            description="This is an error message about copywriting."
-            type="error"
-            showIcon
-        />)
-}
+const loginError = message => {
+	notification.open({
+		message: 'Login Fail',
+		description: message,
+		icon: <Icon type="close-circle" style={{ color: '#dc4d4d' }} />,
+	});
+};
 
 export { loginError }

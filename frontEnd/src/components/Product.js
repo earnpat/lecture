@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./Product.scss";
-import { Row, Col } from "antd";
+import { Row, Col, InputNumber } from "antd";
 
 export class Product extends Component {
   state = {
@@ -8,7 +8,7 @@ export class Product extends Component {
     imgUrl: [
       {
         img: "https://uppicimg.com/file/MDWGLI4g.jpg",
-        changeBorder: { border: "" }
+        changeBorder: { border: "thin solid black" }
       },
       {
         img: "https://uppicimg.com/file/2H9uvb5N.jpg",
@@ -70,10 +70,27 @@ export class Product extends Component {
             <div className="all-img">{chooseImg}</div>
           </Col>
 
-          <Col span={14} style={{ border: "thin solid red" }}>
-            <div className="name-product-large">ตะหมุดดดดด</div>
-            <div className="price-product-large">90.-</div>
-            <div className="detail-product-large">detail</div>
+          <Col span={14}>
+            <div className="product-large">
+              <div className="name-product-large">ตะหมุดดดดด</div>
+              <div className="price-product-large">90.-</div>
+
+              <div style={{display: 'flex'}}>
+                <div className="amount-product-large">
+                  <InputNumber
+                  className="input-number"
+                    min={1}
+                    defaultValue={1}
+                    // onChange={onChange}
+                  />
+                </div>
+                <div className="add-product-large">
+                  <button>เพิ่มลงตะกร้า</button>
+                </div>
+              </div>
+
+              <div className="detail-product-large">detail</div>
+            </div>
           </Col>
         </Row>
       </div>

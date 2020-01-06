@@ -6,7 +6,7 @@ export class ProductDetail extends Component {
     render() {
         return (
             <div>
-                {/* <NavBar /> */}
+                <NavBar />
                 <Product />
             </div>
         )
