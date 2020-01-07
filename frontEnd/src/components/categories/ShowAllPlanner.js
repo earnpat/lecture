@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import "./ShowProductCard.scss";
+import "./ShowAllProducts.scss";
 import { Card } from "antd";
-import Axios from "../config/axios.setup";
+import Axios from "../../config/axios.setup";
 
-export class ShowProductCard extends Component {
+export class ShowAllPlanner extends Component {
   state = {
     products: []
   };
@@ -12,7 +12,7 @@ export class ShowProductCard extends Component {
     Axios.get("/products")
       .then(result => {
         this.setState({
-          products: result.data
+          products: result.data.filter(product => (product.category==='planner'))
         });
       })
       .catch(err => {
@@ -62,4 +62,4 @@ export class ShowProductCard extends Component {
   }
 }
 
-export default ShowProductCard;
+export default ShowAllPlanner;

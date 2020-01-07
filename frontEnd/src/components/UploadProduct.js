@@ -107,48 +107,36 @@ export class UploadProductDetail extends Component {
   }
 
   handleUploadProduct = e => {
+    console.log(e);
     e.preventDefault();
-    this.setState(
-      {
-        image_url_1: this.state.array[0].img,
-        image_url_2: this.state.array[1].img,
-        image_url_3: this.state.array[2].img,
-        image_url_4: this.state.array[3].img
-      },
-      () => {
-        this.props.form.validateFields((errors, value) => {
-          if (!errors) {
-            const {
-              product_name,
-              price,
-              detail,
-              category,
-              image_url_1,
-              image_url_2,
-              image_url_3,
-              image_url_4
-            } = this.state;
+    this.props.form.validateFields((errors, value) => {
+      console.log(errors, value);
+      if (!errors) {
+        const {
+          product_name,
+          price,
+          detail,
+          category
+        } = this.state;
 
-            Axios.post("/upload", {
-              product_name,
-              price,
-              detail,
-              category,
-              image_url_1,
-              image_url_2,
-              image_url_3,
-              image_url_4
-            })
-              .then(result => {
-                console.log(`result : ${result}`);
-              })
-              .catch(err => {
-                console.error(err.message);
-              });
-          }
-        });
+        Axios.post("/upload", {
+          product_name,
+          price,
+          detail,
+          category,
+          image_url_1: this.state.array[0].img,
+          image_url_2: this.state.array[1].img,
+          image_url_3: this.state.array[2].img,
+          image_url_4: this.state.array[3].img
+        })
+          .then(result => {
+            console.log(`result : ${result}`);
+          })
+          .catch(err => {
+            console.error(err.message);
+          });
       }
-    );
+    });
   };
 
   render() {
@@ -195,10 +183,13 @@ export class UploadProductDetail extends Component {
                     {getFieldDecorator("product_first_img", {
                       rules: [
                         {
-                          required: true,
-                          message: "กรุณาใส่ภาพปก",
-                          type: "object",
-                          whitespace: true
+                          validator: (rule, value, cb) => {
+                            console.log(value);
+                            if (!value || value.fileList.length === 0) {
+                              cb("กรุณาใส่ภาพปก");
+                            }
+                            cb();
+                          }
                         }
                       ]
                     })(
@@ -206,17 +197,24 @@ export class UploadProductDetail extends Component {
                         name="photo"
                         listType="picture-card"
                         className="avatar-uploader"
-                        showUploadList={false}
+                        showUploadList={true}
                         action="http://localhost:8080/upload-photo"
                         beforeUpload={beforeUpload}
                         onChange={this.handleUploadImg(0)}
+                        onRemove={e => {
+                          console.log(e);
+                          let newArray = this.state.array.map((item, index) => {
+                            if (index === 0) {
+                              item.img = "";
+                            }
+                            return item;
+                          });
+                          this.setState({
+                            array: newArray
+                          });
+                        }}
                       >
-                        {this.state.array[0].img ? (
-                          <img
-                            src={this.state.array[0].img}
-                            style={{ width: "100%" }}
-                          />
-                        ) : (
+                        {this.state.array[0].img === "" && (
                           <div>
                             {this.uploadButton(this.state.array[0].loading)}
                             <div style={{ marginTop: "10px" }}>ภาพปก</div>
@@ -231,17 +229,24 @@ export class UploadProductDetail extends Component {
                     name="photo"
                     listType="picture-card"
                     className="avatar-uploader"
-                    showUploadList={false}
+                    showUploadList={true}
                     action="http://localhost:8080/upload-photo"
                     beforeUpload={beforeUpload}
                     onChange={this.handleUploadImg(1)}
+                    onRemove={e => {
+                      console.log(e);
+                      let newArray = this.state.array.map((item, index) => {
+                        if (index === 1) {
+                          item.img = "";
+                        }
+                        return item;
+                      });
+                      this.setState({
+                        array: newArray
+                      });
+                    }}
                   >
-                    {this.state.array[1].img ? (
-                      <img
-                        src={this.state.array[1].img}
-                        style={{ width: "100%" }}
-                      />
-                    ) : (
+                    {this.state.array[1].img === "" && (
                       <div>
                         {this.uploadButton(this.state.array[1].loading)}
                         <div style={{ marginTop: "10px" }}>ภาพ 1</div>
@@ -254,17 +259,24 @@ export class UploadProductDetail extends Component {
                     name="photo"
                     listType="picture-card"
                     className="avatar-uploader"
-                    showUploadList={false}
+                    showUploadList={true}
                     action="http://localhost:8080/upload-photo"
                     beforeUpload={beforeUpload}
                     onChange={this.handleUploadImg(2)}
+                    onRemove={e => {
+                      console.log(e);
+                      let newArray = this.state.array.map((item, index) => {
+                        if (index === 2) {
+                          item.img = "";
+                        }
+                        return item;
+                      });
+                      this.setState({
+                        array: newArray
+                      });
+                    }}
                   >
-                    {this.state.array[2].img ? (
-                      <img
-                        src={this.state.array[2].img}
-                        style={{ width: "100%" }}
-                      />
-                    ) : (
+                    {this.state.array[2].img === "" && (
                       <div>
                         {this.uploadButton(this.state.array[2].loading)}
                         <div style={{ marginTop: "10px" }}>ภาพ 2</div>
@@ -274,6 +286,34 @@ export class UploadProductDetail extends Component {
                 </div>
                 <div>
                   <Upload
+                    name="photo"
+                    listType="picture-card"
+                    className="avatar-uploader"
+                    showUploadList={true}
+                    action="http://localhost:8080/upload-photo"
+                    beforeUpload={beforeUpload}
+                    onChange={this.handleUploadImg(3)}
+                    onRemove={e => {
+                      console.log(e);
+                      let newArray = this.state.array.map((item, index) => {
+                        if (index === 3) {
+                          item.img = "";
+                        }
+                        return item;
+                      });
+                      this.setState({
+                        array: newArray
+                      });
+                    }}
+                  >
+                    {this.state.array[3].img === "" && (
+                      <div>
+                        {this.uploadButton(this.state.array[3].loading)}
+                        <div style={{ marginTop: "10px" }}>ภาพ 3</div>
+                      </div>
+                    )}
+                  </Upload>
+                  {/* <Upload
                     name="photo"
                     listType="picture-card"
                     className="avatar-uploader"
@@ -293,7 +333,7 @@ export class UploadProductDetail extends Component {
                         <div style={{ marginTop: "10px" }}>ภาพ 3</div>
                       </div>
                     )}
-                  </Upload>
+                  </Upload> */}
                 </div>
               </Col>
             </Row>
@@ -374,6 +414,7 @@ export class UploadProductDetail extends Component {
                     <InputNumber
                       onChange={this.handleChangePrice}
                       className="input-price"
+                      type="number"
                       min={1}
                     />
                   )}

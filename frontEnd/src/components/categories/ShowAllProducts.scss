@@ -1,24 +1,26 @@
 .container-show-product {
-    margin: 100px;
+    margin: 50px 150px;
     display: flex;
     flex-wrap: wrap;
 }
 
 .card-product {
-    width: 300px;
-    margin: 30px;
+    width: 260px;
+    margin: 20px;
 }
 
 .plain-img-product {
-    height: 300px;
-    width: 300px;
+    height: 260px;
+    width: 260px;
     text-align: center;
     padding: 5px;
+    display: flex !important;
     // position: relative;
     // border: thin solid black;
     img {
         max-width: 100%;
         max-height: 100%;
+        margin: auto;
         // position: absolute;
         // top: 50%;
         // left: 50%;

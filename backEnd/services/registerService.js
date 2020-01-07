@@ -30,7 +30,7 @@ module.exports = (app, db) => {
               .update({
                 user_id: req.body.user_id,
                 username: req.body.username,
-                // password: req.body.password,
+                password: req.body.password,
                 firstname: req.body.firstname,
                 lastname: req.body.lastname,
                 birth: req.body.birth,
@@ -67,7 +67,11 @@ module.exports = (app, db) => {
         }
       } else {
         const token = jwt.sign(
-          { id: user.id, role: user.role, name: user.name },
+          { 
+            id: user.user_id,
+            role: user.role,
+            name: user.username,
+          },
           config.jwtOptions.secretOrKey,
           { expiresIn: 3600 }
         );

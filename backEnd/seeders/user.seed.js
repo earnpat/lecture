@@ -5,8 +5,8 @@ module.exports = {
         [
           {
             user_id: '55555',
-            username: 'root',
-            password: '123456789',
+            username: 'earnpat',
+            password: '$2a$10$Fv5HUGsvBgdbZFfjoq8ifOwTgF6DTscSes76kPCpFVAWT0vXbDeOe',
             firstname: 'earn',
             lastname: 'pat',
             birth: '1996',

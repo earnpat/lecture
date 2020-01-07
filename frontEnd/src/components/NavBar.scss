@@ -5,6 +5,7 @@
     box-shadow: 0px 1px 6px 0px #999999;
     position: sticky;
     top: 0;
+    z-index: 5;
 }
 
 .blank {
@@ -31,18 +32,18 @@
     opacity: 1;
 }
 
-.log-modal {
-    color: white;
-    opacity: 0.8;
-    font-size: 15px;
-    transition: all 0.3s;
-    cursor: pointer;
-}
+// .log-modal {
+//     color: white;
+//     opacity: 0.8;
+//     font-size: 15px;
+//     transition: all 0.3s;
+//     cursor: pointer;
+// }
 
-.log-modal:hover {
-    color: white;
-    opacity: 1;
-}
+// .log-modal:hover {
+//     color: white;
+//     opacity: 1;
+// }
 
 .logo-nav {
     text-align: right;

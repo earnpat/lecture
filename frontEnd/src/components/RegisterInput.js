@@ -29,7 +29,7 @@ class RegisterInputInfo extends React.Component {
   };
 
   handleBirthChange = (date, dateString) => {
-    console.log(dateString); // use
+    console.log(date, dateString); // use
     this.setState({
       birth: dateString
     });

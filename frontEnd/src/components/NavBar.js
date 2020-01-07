@@ -3,12 +3,13 @@ import "./NavBar.scss";
 import Axios from "../config/axios.setup";
 import jwtDecode from "jwt-decode";
 import { Link, withRouter } from "react-router-dom";
-import { loginError } from "../components/Notifications/notification";
+import { loginError } from "./notifications/notification";
 import { Row, Col, Button } from "antd";
 import { Icon, Tooltip, Popover, Modal, Input, Badge, Alert } from "antd";
 
 class NavBar extends Component {
   state = {
+    isLogin: false,
     modalVisible: false,
     username: "",
     password: ""
@@ -18,12 +19,24 @@ class NavBar extends Component {
     this.setState({ modalVisible });
   }
 
+  componentDidMount = () => {
+    let token = localStorage.getItem("ACCESS_TOKEN");
+    // console.log("token", token);
+
+    this.setState({ isLogin: token ? true : false },
+      // () => { console.log(this.state.isLogin) }
+    );
+  };
+
   handleLogin = e => {
     e.preventDefault();
     const { username, password } = this.state;
     Axios.post("/login", { username, password })
       .then(result => {
         console.log(result.data);
+        localStorage.setItem("ACCESS_TOKEN", result.data.token);
+        this.setModalVisible(false);
+        this.setState({ isLogin: true });
         this.props.history.push("/home");
       })
       .catch(err => {
@@ -32,58 +45,85 @@ class NavBar extends Component {
       });
   };
 
+  handleLogOut = e => {
+    e.preventDefault();
+    localStorage.removeItem("ACCESS_TOKEN");
+    // console.log("islogin", this.state.isLogin);
+    this.setState({ isLogin: false });
+  };
+
   render() {
+    // console.log(this.props.history);
+
     return (
       <div className="navBar">
         <Row className="blank">
-          <div className="log-reg">
-            <span>
-              <Link className="reg-link" to="/register">
-                สมัครสมาชิก
-              </Link>
-            </span>
-            <span style={{ color: "white", opacity: "0.8" }}> | </span>
-            {/* <Popover content={login} trigger="click">
-                            <span>เข้าสู่ระบบ</span>
-                        </Popover> */}
-            <span
-              className="log-modal"
-              onClick={() => this.setModalVisible(true)}
-            >
-              เข้าสู่ระบบ
-            </span>
-            <Modal
-              centered
-              visible={this.state.modalVisible}
-              footer={null}
-              // onOk={() => this.setModalVisible(false)}
-              onCancel={() => this.setModalVisible(false)}
-            >
-              <div>
-                <div className="log">เข้าสู่ระบบ</div>
-                <div className="log-user">
-                  <Input
-                    onChange={e => this.setState({ username: e.target.value })}
-                    placeholder="ชื่อผู้ใช้"
-                    prefix={<Icon type="user" style={{ color: "#d9d9d9" }} />}
-                  />
-                </div>
-                <div className="log-user">
-                  <Input
-                    type="password"
-                    onChange={e => this.setState({ password: e.target.value })}
-                    placeholder="รหัสผ่าน"
-                    prefix={<Icon type="lock" style={{ color: "#d9d9d9" }} />}
-                  />
-                </div>
-                <div className="log-user">
-                  <button className="btn-log" onClick={this.handleLogin}>
-                    เข้าสู่ระบบ
-                  </button>
-                </div>
+          {this.state.isLogin ? (
+            <div className="log-reg">
+              <span>
+                <Link className="reg-link" to="/myaccount">
+                  บัญชีของฉัน
+                </Link>
+              </span>
+              <span style={{ color: "white", opacity: "0.8" }}> | </span>
+              <span>
+                <Link
+                  className="reg-link"
+                  to="/home"
+                  onClick={this.handleLogOut}
+                >
+                  ออกจากระบบ
+                </Link>
+              </span>
+            </div>
+          ) : (
+              <div className="log-reg">
+                <span>
+                  <Link className="reg-link" to="/register">
+                    สมัครสมาชิก
+                </Link>
+                </span>
+                <span style={{ color: "white", opacity: "0.8" }}> | </span>
+                <span
+                  className="reg-link"
+                  onClick={() => this.setModalVisible(true)}
+                >
+                  เข้าสู่ระบบ
+              </span>
               </div>
-            </Modal>
-          </div>
+            )}
+
+          <Modal
+            centered
+            visible={this.state.modalVisible}
+            footer={null}
+            // onOk={() => this.setModalVisible(false)}
+            onCancel={() => this.setModalVisible(false)}
+          >
+            <div>
+              <div className="log">เข้าสู่ระบบ</div>
+              <div className="log-user">
+                <Input
+                  onChange={e => this.setState({ username: e.target.value })}
+                  placeholder="ชื่อผู้ใช้"
+                  prefix={<Icon type="user" style={{ color: "#d9d9d9" }} />}
+                />
+              </div>
+              <div className="log-user">
+                <Input
+                  type="password"
+                  onChange={e => this.setState({ password: e.target.value })}
+                  placeholder="รหัสผ่าน"
+                  prefix={<Icon type="lock" style={{ color: "#d9d9d9" }} />}
+                />
+              </div>
+              <div className="log-user">
+                <button className="btn-log" onClick={this.handleLogin}>
+                  เข้าสู่ระบบ
+                </button>
+              </div>
+            </div>
+          </Modal>
         </Row>
         <Row>
           <Col span={5} className="logo-nav">
@@ -105,7 +145,9 @@ class NavBar extends Component {
               <Col span={5} className="cart">
                 <Badge count={0} showZero>
                   <Link to="/shoppingcart">
-                    <Icon className="cart-icon" type="shopping-cart" />
+                    <div className="cart-icon">
+                      <Icon type="shopping-cart" />
+                    </div>
                   </Link>
                 </Badge>
               </Col>
@@ -115,15 +157,19 @@ class NavBar extends Component {
                 <span>โปรโมชั่น</span>
               </Col>
               <Col span={4} className="menu">
-                <span>สมุดเลคเชอร์</span>
+                <Link to="/lectures">
+                  <span>สมุดเลคเชอร์</span>
+                </Link>
               </Col>
               <Col span={4} className="menu">
-                <Link to="/planner">
+                <Link to="/planners">
                   <span>สมุดแพลนเนอร์</span>
                 </Link>
               </Col>
               <Col span={4} className="menu">
-                <span>สินค้าอื่นๆ</span>
+                <Link to="/others">
+                  <span>สินค้าอื่นๆ</span>
+                </Link>
               </Col>
               <Col span={4} className="menu">
                 <span>วิธีการสั่งซื้อ</span>

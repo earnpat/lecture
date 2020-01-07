@@ -6,8 +6,8 @@ const BCRYPT_SALT_ROUNDS = config.salt_length;
 
 const passport = require("passport");
 const localStrategy = require("passport-local").Strategy;
-const JWTStrategy = require("passport-jwt").Strategy;
-const extractJwt = require("passport-jwt").ExtractJwt;
+const JwtStrategy = require("passport-jwt").Strategy;
+const ExtractJwt = require("passport-jwt").ExtractJwt;
 const db = require("../../models");
 
 let jwtOptions = {};
@@ -65,7 +65,7 @@ passport.use(
           message: "username or password is incorrect."
         });
       }
-      bcrypt.compare(password, user.password, function(err, response) {
+      bcrypt.compare(password, user.password, function (err, response) {
         if (err) {
           console.error(err);
           done(err);
@@ -83,24 +83,26 @@ passport.use(
 );
 
 const opts = {
-  jwtFromRequest: extractJwt.fromAuthHeaderAsBearerToken(),
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: jwtOptions.secretOrKey
 };
 
 passport.use(
   "jwt",
-  new JWTStrategy(opts, (jwt_payload, done) => {
+  new JwtStrategy(opts, (jwt_payload, done) => {
     console.log({ jwt_payload });
-    db.user.findOne({ where: { id: jwt_payload.id } }).then(user => {
+    db.user.findOne({ where: { user_id: jwt_payload.id } }).then(user => {
       if (user) {
         console.log("user found");
-        done(null, user);
+        return done(null, user);
       } else {
         console.log("user is not found");
-        done(null, false);
+        return done(null, false);
       }
-    });
+    }).catch(err => {
+      console.log(err)
+    })
   })
 );
 
-module.exports = {jwtOptions, BCRYPT_SALT_ROUNDS};
+module.exports = { jwtOptions, BCRYPT_SALT_ROUNDS };

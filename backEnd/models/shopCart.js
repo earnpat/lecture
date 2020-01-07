@@ -15,18 +15,20 @@ module.exports = (sequelize, Datatype) => {
         totalPrice: {
             type: Datatype.INTEGER,
             allowNull: false
+        },
+        payment: {
+            type: Datatype.STRING,
+            allowNull: false
+        },
+        shipping: {
+            type: Datatype.STRING,
+            allowNull: false
         }
     },{freezeTableName: true,
         timestamps: false
     })
 
     ShopCart.associate = (models) => {
-        ShopCart.hasOne(models.order, {
-            foreignKey: {
-                name: 'shopCart_id',
-                allowNull: false
-            }
-        })
         ShopCart.belongsTo(models.user, {
             foreignKey: {
                 name: 'user_id',
