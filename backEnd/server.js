@@ -9,6 +9,7 @@ const db = require("./models");
 
 const registerService = require("./services/registerService");
 const productService = require("./services/productService");
+const shopCartService = require("./services/shopCartService")
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 db.sequelize.sync({ force: false }).then(() => {
   registerService(app, db);
   productService(app, db);
+  shopCartService(app, db);
 
   app.listen(8080, () => {
     console.log("server is running");

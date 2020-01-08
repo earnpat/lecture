@@ -26,7 +26,7 @@ module.exports = (app, db) => {
     }),
     async (req, res) => {
       console.log(req.user, "😁😁")
-      if (req.user.role === "user") {
+      if (req.user.role === "user" || "admin") {
         await db.shopcart
           .create({
             // image_url_1: req.body.image_url_1,

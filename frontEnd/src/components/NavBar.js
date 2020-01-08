@@ -80,12 +80,18 @@ class NavBar extends Component {
   };
 
   calculateTotalAmount = () => {
-    let total = 0;
-    console.log(this.props.cartList)
-    this.props.cartList.map(product => {
-      total += product.quantity
-    })
-    return total
+    let token = localStorage.getItem("ACCESS_TOKEN");
+    if (token) {
+      let total = 0;
+      console.log(this.props.cartList)
+      this.props.cartList.map(product => {
+        total += product.quantity
+      })
+      return total
+    } else {
+      return 0
+    }
+
   }
 
   render() {
@@ -225,4 +231,4 @@ const mapStateToProps = (state) => ({
   total: state.total
 })
 
-export default connect(mapStateToProps, null)(NavBar)
+export default withRouter(connect(mapStateToProps, null)(NavBar))
