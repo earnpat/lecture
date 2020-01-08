@@ -47,7 +47,7 @@ module.exports = (app, db) => {
       session: false
     }),
     async (req, res) => {
-      console.log(req.user, "😁😁")
+      // console.log(req.user, "😁😁")
       if (req.user.role === "admin") {
         await db.images
           .create({

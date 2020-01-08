@@ -29,13 +29,13 @@ export class Product extends Component {
   };
 
   componentDidMount = () => {
-    let pathName = this.props.history.location.pathname
-    let id = pathName.split("/").pop()
+    let pathName = this.props.history.location.pathname;
+    let id = pathName.split("/").pop();
     Axios.get("/products")
       .then(result => {
         let targetProduct = result.data.filter(
           product => product.product_id === id
-        )[0]
+        )[0];
         console.log(targetProduct);
         this.setState({
           product: targetProduct,
@@ -103,7 +103,7 @@ export class Product extends Component {
     return (
       <div>
         <Row className="row-product" type="flex" align="top" justify="center">
-          <Col span={10} style={{ border: "thin solid blue" }}>
+          <Col span={10}>
             <div className="big-product-img">
               <img src={this.state.bigImg} />
             </div>
@@ -112,24 +112,31 @@ export class Product extends Component {
 
           <Col span={14}>
             <div className="product-large">
-              <div className="name-product-large">{this.state.product.product_name}</div>
-              <div className="price-product-large">{this.state.product.price}.-</div>
+              <div className="name-product-large">
+                {this.state.product.product_name}
+              </div>
+              <div className="price-product-large">
+                {this.state.product.price}.-
+              </div>
 
               <div style={{ display: "flex" }}>
-                <div className="amount-product-large">
+                {/* <div className="amount-product-large">
                   <InputNumber
                     className="input-number"
                     min={1}
                     defaultValue={1}
                     // onChange={onChange}
                   />
-                </div>
+                </div> */}
                 <div className="add-product-large">
                   <button>เพิ่มลงตะกร้า</button>
                 </div>
               </div>
 
-              <div className="detail-product-large">{this.state.product.detail}</div>
+              <div className="detail-product-large">
+                รายละเอียดสินค้า : <br />
+                {this.state.product.detail}
+              </div>
             </div>
           </Col>
         </Row>

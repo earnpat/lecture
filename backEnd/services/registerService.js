@@ -14,6 +14,14 @@ module.exports = (app, db) => {
       });
   });
 
+  app.post("/isTokenExpired",  
+  passport.authenticate("jwt", {
+    session: false
+  }),
+  (req, res) => {
+    res.status(200).json({ message: "Online" });
+  });
+
   app.post("/register", (req, res, next) => {
     passport.authenticate("register", (err, users, info) => {
       if (err) {
@@ -29,8 +37,6 @@ module.exports = (app, db) => {
             userFound
               .update({
                 user_id: req.body.user_id,
-                username: req.body.username,
-                password: req.body.password,
                 firstname: req.body.firstname,
                 lastname: req.body.lastname,
                 birth: req.body.birth,

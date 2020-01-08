@@ -1,7 +1,9 @@
 import React, { Component } from "react";
+import { connect } from 'react-redux'
 import "./ShopCart.scss";
 import Axios from "../config/axios.setup";
 import { Table, Button, Icon, Row, Col, Card, Select, Form } from "antd";
+import { Link, withRouter } from "react-router-dom";
 
 function onBlur() {
   console.log("blur");
@@ -17,14 +19,26 @@ function onSearch(val) {
 
 export class ShopCartDetail extends Component {
   state = {
+    data: [],
+    totalPricePro: 0,
+    shipCost: 0,
+    totalAndShip: 0,
     shipping: "",
     payment: ""
   };
 
   handleChangeShipping = value => {
-    this.setState({
-      shipping: value
-    });
+    this.setState(
+      {
+        shipping: value,
+        shipCost: value === "reg" ? 30 : 50
+      },
+      () => {
+        this.setState({
+          totalAndShip: this.state.totalPricePro + this.state.shipCost
+        });
+      }
+    );
   };
 
   handleChangePayment = value => {
@@ -41,15 +55,9 @@ export class ShopCartDetail extends Component {
       if (!errors) {
         const { payment, shipping } = this.state;
 
-        Axios.post("/upload", {
-          // product_name,
-          // price,
-          // detail,
-          // category,
-          // image_url_1: this.state.array[0].img,
-          // image_url_2: this.state.array[1].img,
-          // image_url_3: this.state.array[2].img,
-          // image_url_4: this.state.array[3].img
+        Axios.post("/shoppingcart", {
+          // payment,
+          // shipping
         })
           .then(result => {
             console.log(`result : ${result}`);
@@ -57,9 +65,23 @@ export class ShopCartDetail extends Component {
           .catch(err => {
             console.error(err.message);
           });
+        this.props.history.push("/doneshop");
       }
     });
+
   };
+
+  componentDidMount() {
+    this.setState({
+      data: this.props.cartList,
+      totalPricePro: this.props.cartList.reduce((prev, curr) => {
+        curr += (prev.price * prev.quantity)
+      }, 0)
+    })
+    console.log(this.props.cartList)
+    
+  }
+  
 
   render() {
     const { Option } = Select;
@@ -67,15 +89,18 @@ export class ShopCartDetail extends Component {
     const columns = [
       {
         title: "รายการสินค้า",
-        dataIndex: "products",
-        key: "products",
+        dataIndex: "product_name",
+        key: "product_name",
         // className: "title-table",
-        render: text => (
+        render: (text, product) => (
           <div>
-            <img src={text[0]} /> &nbsp;
-            <span>
-              <b>{text[1]}</b>
-            </span>
+            <img src={product.image.image_url_1} style={{maxWidth: "100px"}} /> &nbsp;
+            <div>
+              <b>{product.product_name}</b>
+            </div>
+            <div>
+              <b>{product.detail}</b>
+            </div>
           </div>
         )
       },
@@ -88,17 +113,22 @@ export class ShopCartDetail extends Component {
       },
       {
         title: "จำนวน (ชิ้น)",
-        dataIndex: "amount",
-        key: "amount",
+        dataIndex: "quantity",
+        key: "quantity",
         width: 160,
         className: "title-table"
       },
       {
         title: "ราคารวม/รายการสินค้า (บาท)",
-        dataIndex: "total",
+        // dataIndex: "total",
         key: "total",
         width: 220,
-        className: "title-table"
+        className: "title-table",
+        render: (text, product) => (
+          <span>
+            <b>{product.price * product.quantity}</b>
+          </span>
+        )
       },
       {
         title: "",
@@ -116,15 +146,16 @@ export class ShopCartDetail extends Component {
       }
     ];
 
-    const data = [
-      {
-        key: "1",
-        products: ["https://uppicimg.com/file/IxivbCNG.png", "John Brown"],
-        price: 32,
-        amount: "5 pcs",
-        total: 555555
-      }
-    ];
+    // const data = [
+    //   {
+    //     key: "1",
+    //     products: ["https://uppicimg.com/file/IxivbCNG.png", "John Brown"],
+    //     price: 32,
+    //     amount: "5 pcs",
+    //     total: 555555
+    //   }
+    // ];
+    
     return (
       <div className="container-shopping-cart">
         <Row gutter={[16, 8]}>
@@ -134,16 +165,12 @@ export class ShopCartDetail extends Component {
               bordered
               pagination={false}
               columns={columns}
-              dataSource={data}
+              dataSource={this.state.data}
             />
           </Col>
           <Col span={6} className="total-price">
-            <Card title="รายการรวม">
-              <p>สินค้า</p>
-              <p>สินค้า</p>
-              <p>สินค้า</p>
-
-              <Form.Item>
+            <Card title="สรุปยอด">
+              <Form.Item label="ช่องทางการจัดส่ง" className="text-left">
                 {getFieldDecorator("shipping", {
                   rules: [
                     {
@@ -168,14 +195,13 @@ export class ShopCartDetail extends Component {
                         .indexOf(input.toLowerCase()) >= 0
                     }
                   >
-                    <Option value="thaipostreg">ลงทะเบียน</Option>
-                    <Option value="thaipostems">EMS</Option>
-                    <Option value="kerry">Kerry</Option>
+                    <Option value="reg">ลงทะเบียน</Option>
+                    <Option value="ems">EMS</Option>
                   </Select>
                 )}
               </Form.Item>
 
-              <Form.Item>
+              <Form.Item label="ช่องทางการชำระเงิน" className="text-left">
                 {getFieldDecorator("payment", {
                   rules: [
                     {
@@ -205,12 +231,32 @@ export class ShopCartDetail extends Component {
                   </Select>
                 )}
               </Form.Item>
+              <Row>
+                <Col span={12} className="total-all">
+                  ราคาสินค้า <br />
+                  ค่าจัดส่ง <br />
+                  รวมทั้งหมด <br />
+                  <br />
+                </Col>
+                <Col span={12} className="result-total-all">
+                  {this.state.totalPricePro} บาท
+                  <br />
+                  {this.state.shipCost} บาท
+                  <br />
+                  {this.state.totalAndShip} บาท
+                  <br />
+                  <br />
+                </Col>
+              </Row>
               <button
                 className="btn-cf"
                 onClick={e => this.handleConfirmCard(e)}
               >
                 ยืนยันการสั่งซื้อ
               </button>
+              <Link to="/home">
+                <button className="btn-cc">เลือกสินค้าเพิ่ม</button>
+              </Link>
             </Card>
           </Col>
         </Row>
@@ -221,4 +267,13 @@ export class ShopCartDetail extends Component {
 
 const ShopCart = Form.create()(ShopCartDetail);
 
-export default ShopCart;
+
+const mapStateToProps = (state) => ({
+  cartList: state.cartList,
+})
+
+const mapDispatchToProps = {
+  
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ShopCart));

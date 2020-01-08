@@ -1,9 +1,15 @@
 import React, { Component } from "react";
+import { connect } from 'react-redux'
 import "./ShowAllProducts.scss";
 import { Card } from "antd";
 import Axios from "../../config/axios.setup";
 import { Link, withRouter } from "react-router-dom";
 import Product from "../Product";
+import _ from "lodash"
+
+import { actions as cartAction } from "../../redux/cart"
+
+import { actions as totalAction } from "../../redux/totalReducer"
 
 export class ShowAllLecture extends Component {
   constructor(props) {
@@ -28,11 +34,23 @@ export class ShowAllLecture extends Component {
   };
 
   handleAddToCart = id => {
-    console.log(id);
+    const selectedProduct = this.state.products.find(product => product.product_id == id)
+    let newSelectedProduct = Object.assign({}, selectedProduct, { quantity: 1 })
+    this.props.setTotalList(1)
+    this.props.setCartList(newSelectedProduct)
+    this.setState({dummy: ""})
   };
 
+  // componentDidUpdate(prevProps, prevState) {
+  //   // console.log(prevProps.cartList)
+  //   // console.log(this.props.cartList)
+  //   if (!_.isEqual(prevProps.cartList, this.props.cartList)) {
+  //     console.log(this.props.cartList)
+  //   }
+  // }
+  
+
   render() {
-    console.log(this.state.products);
     const { Meta } = Card;
 
     return (
@@ -80,4 +98,15 @@ export class ShowAllLecture extends Component {
   }
 }
 
-export default ShowAllLecture;
+const mapStateToProps = ({ cart }) => ({
+  // cartList: cart.cartList,
+  // total: cart.total,
+})
+
+const mapDispatchToProps = {
+  ...cartAction,
+  ...totalAction
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ShowAllLecture)
+

@@ -31,4 +31,30 @@ Axios.interceptors.request.use(
   }
 )
 
+// Redirect to login page in case of 401 response
+Axios.interceptors.response.use(
+  async config => {
+    return config;
+  },
+  async error => {
+    if (error.request === undefined) throw error;
+
+    let url = error.request.responseURL;
+    if (error.request.status === 401 && isUnprotectedPath(url)) {
+      throw error;
+    }
+
+    if (error.request.status === 401) {
+      console.log("Session expire, redirect to login");
+      alert("Session expire, redirect to login");
+
+      localStorage.removeItem("ACCESS_TOKEN")
+      window.location.href = "/home"
+    }
+
+    throw error;
+  },
+);
+
 export default Axios;
+

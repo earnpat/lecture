@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from 'react-redux'
 import "./NavBar.scss";
 import Axios from "../config/axios.setup";
 import jwtDecode from "jwt-decode";
@@ -6,6 +7,7 @@ import { Link, withRouter } from "react-router-dom";
 import { loginError } from "./notifications/notification";
 import { Row, Col, Button } from "antd";
 import { Icon, Tooltip, Popover, Modal, Input, Badge, Alert } from "antd";
+
 
 class NavBar extends Component {
   state = {
@@ -20,13 +22,24 @@ class NavBar extends Component {
   }
 
   componentDidMount = () => {
+    this.calculateTotalAmount()
     let token = localStorage.getItem("ACCESS_TOKEN");
-    // console.log("token", token);
+    console.log("token", token);
+    if (token) {
+      let userInfo = jwtDecode(token);
+      console.log(userInfo);
+    }
 
-    this.setState({ isLogin: token ? true : false },
+    this.setState(
+      { isLogin: token ? true : false }
       // () => { console.log(this.state.isLogin) }
     );
   };
+
+  componentDidUpdate(prevProps, prevState) {
+    // console.log("object")
+    this.checkOnline();
+  }
 
   handleLogin = e => {
     e.preventDefault();
@@ -52,19 +65,38 @@ class NavBar extends Component {
     this.setState({ isLogin: false });
   };
 
-  render() {
-    // console.log(this.props.history);
+  checkOnline = () => {
+    let token = localStorage.getItem("ACCESS_TOKEN");
+    if (token) {
+      Axios.post("/isTokenExpired", {})
+        .then(result => {
+          console.log(result.data);
+          // this.props.history.push("/home");
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    }
+  };
 
+  calculateTotalAmount = () => {
+    let total = 0;
+    console.log(this.props.cartList)
+    this.props.cartList.map(product => {
+      total += product.quantity
+    })
+    return total
+  }
+
+  render() {
     return (
       <div className="navBar">
         <Row className="blank">
           {this.state.isLogin ? (
             <div className="log-reg">
-              <span>
-                <Link className="reg-link" to="/myaccount">
-                  บัญชีของฉัน
-                </Link>
-              </span>
+              <a href="/myaccount" className="reg-link">
+                บัญชีของฉัน
+              </a>
               <span style={{ color: "white", opacity: "0.8" }}> | </span>
               <span>
                 <Link
@@ -143,7 +175,7 @@ class NavBar extends Component {
                 </button>
               </Col>
               <Col span={5} className="cart">
-                <Badge count={0} showZero>
+                <Badge count={this.calculateTotalAmount()} showZero>
                   <Link to="/shoppingcart">
                     <div className="cart-icon">
                       <Icon type="shopping-cart" />
@@ -188,4 +220,9 @@ class NavBar extends Component {
   }
 }
 
-export default withRouter(NavBar);
+const mapStateToProps = (state) => ({
+  cartList: state.cartList,
+  total: state.total
+})
+
+export default connect(mapStateToProps, null)(NavBar)

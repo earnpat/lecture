@@ -1,5 +1,5 @@
 .container-shopping-cart {
-    margin: 50px;
+    margin: 30px 50px;
 }
 
 .cart-static {
@@ -18,8 +18,23 @@
     width: auto;
 }
 
+.text-left {
+    text-align: left;
+}
+
+.total-all {
+    text-align: left;
+    font-size: 18px;
+}
+
+.result-total-all {
+    text-align: right;
+    font-size: 18px;
+}
+
 .btn-cf {
     width: 100%;
+    margin-bottom: 10px;
     height: 35px;
     font-size: 15px;
     background-color: #006699;
@@ -33,4 +48,21 @@
 .btn-cf:hover {
     background-color: #77ddff;
     border: 1px solid #77ddff;
+}
+
+.btn-cc {
+    width: 100%;
+    height: 35px;
+    font-size: 15px;
+    background-color: white;
+    color: #bfbfbf;
+    border-radius: 4px;
+    border: 1px solid #d9d9d9;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-cc:hover {
+    color: whitesmoke;
+    background-color: #d9d9d9;
 }
