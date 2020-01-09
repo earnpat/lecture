@@ -54,7 +54,7 @@ class NavBar extends Component {
       })
       .catch(err => {
         console.error(err);
-        loginError("Username or password is incorrect.");
+        loginError("ชื่อผู้ใช้หรือรหัสผ่านผิดพลาด");
       });
   };
 
@@ -80,18 +80,12 @@ class NavBar extends Component {
   };
 
   calculateTotalAmount = () => {
-    let token = localStorage.getItem("ACCESS_TOKEN");
-    if (token) {
-      let total = 0;
-      console.log(this.props.cartList)
-      this.props.cartList.map(product => {
-        total += product.quantity
-      })
-      return total
-    } else {
-      return 0
-    }
-
+    let total = 0;
+    console.log(this.props.cartList)
+    this.props.cartList.map(product => {
+      total += product.quantity
+    })
+    return total
   }
 
   render() {

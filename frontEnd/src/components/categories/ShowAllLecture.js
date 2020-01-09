@@ -10,6 +10,7 @@ import _ from "lodash"
 import { actions as cartAction } from "../../redux/cart"
 
 import { actions as totalAction } from "../../redux/totalReducer"
+import JwtDecode from "jwt-decode";
 
 export class ShowAllLecture extends Component {
   constructor(props) {
@@ -35,21 +36,14 @@ export class ShowAllLecture extends Component {
 
   handleAddToCart = id => {
     const selectedProduct = this.state.products.find(product => product.product_id == id)
+    console.log("selectedProduct", selectedProduct);
+    
     let newSelectedProduct = Object.assign({}, selectedProduct, { quantity: 1 })
     this.props.setTotalList(1)
     this.props.setCartList(newSelectedProduct)
     this.setState({dummy: ""})
   };
-
-  // componentDidUpdate(prevProps, prevState) {
-  //   // console.log(prevProps.cartList)
-  //   // console.log(this.props.cartList)
-  //   if (!_.isEqual(prevProps.cartList, this.props.cartList)) {
-  //     console.log(this.props.cartList)
-  //   }
-  // }
   
-
   render() {
     const { Meta } = Card;
 
@@ -109,4 +103,3 @@ const mapDispatchToProps = {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShowAllLecture)
-

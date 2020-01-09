@@ -1,9 +1,14 @@
 import React, { Component } from "react";
-import { connect } from 'react-redux'
+import { connect } from "react-redux";
 import "./ShopCart.scss";
 import Axios from "../config/axios.setup";
-import { Table, Button, Icon, Row, Col, Card, Select, Form } from "antd";
+import { Table, Button, Icon, Row, Col, Card, Select, Form, Modal } from "antd";
 import { Link, withRouter } from "react-router-dom";
+import JwtDecode from "jwt-decode";
+
+import { warningShopEmpty, warningLogin } from "./notifications/notification";
+
+import { actions as cartAction } from "../redux/cart";
 
 function onBlur() {
   console.log("blur");
@@ -19,7 +24,6 @@ function onSearch(val) {
 
 export class ShopCartDetail extends Component {
   state = {
-    data: [],
     totalPricePro: 0,
     shipCost: 0,
     totalAndShip: 0,
@@ -47,12 +51,11 @@ export class ShopCartDetail extends Component {
     });
   };
 
-  handleConfirmCard = e => {
-    console.log(e);
-    e.preventDefault();
+  handleConfirmCard = () => {
     this.props.form.validateFields((errors, value) => {
       console.log(errors, value);
       if (!errors) {
+        this.modalSuccess();
         const { payment, shipping } = this.state;
 
         Axios.post("/shoppingcart", {
@@ -65,23 +68,64 @@ export class ShopCartDetail extends Component {
           .catch(err => {
             console.error(err.message);
           });
-        this.props.history.push("/doneshop");
       }
     });
+  };
 
+  getUser = () => {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    if (!token) return { role: "guest" };
+    let user = JwtDecode(token);
+    return user;
+  };
+
+  checkBeforeDoing = () => {
+    const user = this.getUser();
+    if (user.role !== "guest") {
+      // this.handleConfirmCard();
+
+      let tokenCart = localStorage.getItem("cartList");
+      // console.log("tokenCart",tokenCart);
+      let cartList = JSON.parse(tokenCart)
+      if (cartList.length !== 0) {
+        this.handleConfirmCard();
+      } else {
+        warningShopEmpty("")
+        this.props.history.push("/home");
+      }
+
+    } else {
+      warningLogin("")
+      this.props.history.push("/register");
+    }
   };
 
   componentDidMount() {
+    let sum = this.props.cartList.reduce((total, curr) => {
+      return total + curr.price * curr.quantity;
+    }, 0);
+
     this.setState({
-      data: this.props.cartList,
-      totalPricePro: this.props.cartList.reduce((prev, curr) => {
-        curr += (prev.price * prev.quantity)
-      }, 0)
-    })
-    console.log(this.props.cartList)
-    
+      totalPricePro: sum
+    });
   }
-  
+
+  deleteCartList = id => e => {
+    this.props.deleteCartList(id);
+  };
+
+  modalSuccess = () => {
+    let me = this;
+    Modal.success({
+      title: "การสั่งซื้อสำเร็จ",
+      content: "ขอบคุณที่ใช้บริการ",
+      width: 300,
+      onOk() {
+        me.props.clearCart();
+        me.props.history.push("/home");
+      }
+    });
+  };
 
   render() {
     const { Option } = Select;
@@ -93,15 +137,13 @@ export class ShopCartDetail extends Component {
         key: "product_name",
         // className: "title-table",
         render: (text, product) => (
-          <div>
-            <img src={product.image.image_url_1} style={{maxWidth: "100px"}} /> &nbsp;
-            <div>
-              <b>{product.product_name}</b>
-            </div>
-            <div>
-              <b>{product.detail}</b>
-            </div>
-          </div>
+          <Row type="flex" align="middle">
+            <Col span={8}><img
+              src={product.image.image_url_1}
+              style={{ maxWidth: "100px" }}
+            /></Col>
+            <Col span={16}><b>{product.product_name}</b></Col>
+          </Row>
         )
       },
       {
@@ -131,14 +173,17 @@ export class ShopCartDetail extends Component {
         )
       },
       {
-        title: "",
+        title: "ลบ",
         dataIndex: "delete",
         key: "delete",
         width: 80,
         className: "title-table",
-        render: text => (
+        render: (text, product) => (
           <div style={{ textAlign: "center" }}>
-            <Button type="danger">
+            <Button
+              type="danger"
+              onClick={this.deleteCartList(product.product_id)}
+            >
               <Icon type="delete" />
             </Button>
           </div>
@@ -155,7 +200,7 @@ export class ShopCartDetail extends Component {
     //     total: 555555
     //   }
     // ];
-    
+
     return (
       <div className="container-shopping-cart">
         <Row gutter={[16, 8]}>
@@ -165,7 +210,7 @@ export class ShopCartDetail extends Component {
               bordered
               pagination={false}
               columns={columns}
-              dataSource={this.state.data}
+              dataSource={this.props.cartList}
             />
           </Col>
           <Col span={6} className="total-price">
@@ -248,10 +293,7 @@ export class ShopCartDetail extends Component {
                   <br />
                 </Col>
               </Row>
-              <button
-                className="btn-cf"
-                onClick={e => this.handleConfirmCard(e)}
-              >
+              <button className="btn-cf" onClick={e => this.checkBeforeDoing()}>
                 ยืนยันการสั่งซื้อ
               </button>
               <Link to="/home">
@@ -267,13 +309,14 @@ export class ShopCartDetail extends Component {
 
 const ShopCart = Form.create()(ShopCartDetail);
 
-
-const mapStateToProps = (state) => ({
-  cartList: state.cartList,
-})
+const mapStateToProps = state => ({
+  cartList: state.cartList
+});
 
 const mapDispatchToProps = {
-  
-}
+  ...cartAction
+};
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ShopCart));
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(ShopCart)
+);

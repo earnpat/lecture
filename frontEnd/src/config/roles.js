@@ -73,6 +73,7 @@ export default {
             components.lectures,
             components.planners,
             components.others,
+            components.shoppingcart,
             components.product,
         ],
         redirect: ['/home']

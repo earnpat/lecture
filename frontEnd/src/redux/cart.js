@@ -1,9 +1,14 @@
 // REDUCER => อธิบายว่า action ที่มันส่งมาหากู มันให้ทำอะไรบ้าง แล้วกูก็จะได้ทำแล้วอัพเดท Store (state ของกู)
-let initialState = {
-  cartList: [],
-  total: 0
+
+let initialState = () => {
+  let cartList = localStorage.getItem("cartList")
+  if (cartList) {
+    return JSON.parse(cartList)
+  }
+  return []
 }
-const cartReducer = (state = [], action) => {
+
+const cartReducer = (state = initialState(), action) => {
   switch (action.type) {
 
     case 'SET_CART_LIST':
@@ -14,10 +19,22 @@ const cartReducer = (state = [], action) => {
             product.quantity += action.payload.quantity;
           }
         }
+        localStorage.setItem("cartList", JSON.stringify(state))
         return state
       } else {
-        return [...state, action.payload]
+        let cartList = [...state, action.payload]
+        localStorage.setItem("cartList", JSON.stringify(cartList))
+        return cartList
       }
+
+    case 'DELETE_CART_LIST':
+      let id = action.payload
+      let newCartList = state.filter(item => item.product_id !== id)
+      localStorage.setItem("cartList", JSON.stringify(newCartList))
+      return newCartList
+    
+    case 'CLEAR_CART':
+      return []
 
     default:
       return state
@@ -34,5 +51,14 @@ export const actions = {
       type: 'SET_CART_LIST',
       payload: data
     }
-  }
+  },
+  deleteCartList: (id) => {
+    return {
+      type: 'DELETE_CART_LIST',
+      payload: id
+    }
+  },
+  clearCart: () => ({
+    type: 'CLEAR_CART'
+  })
 }

@@ -1,8 +1,14 @@
 import React, { Component } from "react";
+import { connect } from 'react-redux'
 import "./Product.scss";
 import Axios from "../config/axios.setup";
 import { Row, Col, InputNumber } from "antd";
 import { withRouter } from "react-router";
+import _ from "lodash"
+
+import { actions as cartAction } from "../redux/cart"
+
+import { actions as totalAction } from "../redux/totalReducer"
 
 export class Product extends Component {
   state = {
@@ -87,6 +93,18 @@ export class Product extends Component {
     });
   };
 
+  handleAddToCart = id => {
+    const selectedProduct = this.state.product
+    console.log("selectedProduct", selectedProduct);
+
+    let newSelectedProduct = Object.assign({}, selectedProduct, {
+      quantity: 1
+    });
+    this.props.setTotalList(1);
+    this.props.setCartList(newSelectedProduct);
+    this.setState({ dummy: "" });
+  };
+
   render() {
     const chooseImg = this.state.imgUrl.map((img, idx) => {
       return (
@@ -129,7 +147,11 @@ export class Product extends Component {
                   />
                 </div> */}
                 <div className="add-product-large">
-                  <button>เพิ่มลงตะกร้า</button>
+                  <button
+                    onClick={() => this.handleAddToCart(this.state.product.product_id)}
+                  >
+                    เพิ่มลงตะกร้า
+                  </button>
                 </div>
               </div>
 
@@ -145,4 +167,14 @@ export class Product extends Component {
   }
 }
 
-export default withRouter(Product);
+const mapStateToProps = ({ cart }) => ({
+  // cartList: cart.cartList,
+  // total: cart.total,
+})
+
+const mapDispatchToProps = {
+  ...cartAction,
+  ...totalAction
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Product))
